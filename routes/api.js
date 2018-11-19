@@ -8,14 +8,14 @@ let { isNullOrUndefined } = require('../util')
 
 /* 登录 */
 router.get('/login', function (req, res, next) {
-  
+
   res.writeHead(200,{'Content-Type':'text/html;charset=utf-8'});
-  
+
   if (isNullOrUndefined(req.query.email) || isNullOrUndefined(req.query.passwd)) {
-    res.end(JSON.stringify({state: 2, message: `逗我么？`}))
+    res.end(JSON.stringify({state: 2, message: `字段不全`}));
     return false
   }
-  
+
   findOne({
     col: `user`,
     query: {
@@ -23,30 +23,30 @@ router.get('/login', function (req, res, next) {
     }
   })
     .then(data => {
-      if (data.passwd === req.query.passwd) {
+      if (!!data && data.passwd === req.query.passwd) {
         res.end(JSON.stringify({state: 0, data}))
       } else {
-        res.end(JSON.stringify({state: 1, message: `密码错误`}))
+        res.end(JSON.stringify({state: 1, message: `账号或码错误`}))
       }
     })
     .catch(e => {
       console.error(e)
       res.end(JSON.stringify({state: 2, message: `不知道`}))
     })
-  
-  
+
+
 })
 
 /* 注册 */
 router.post('/login', function(req, res, next) {
-  
+
   res.writeHead(200,{'Content-Type':'text/html;charset=utf-8'});
-  
+
   if ( isNullOrUndefined(req.body.email) ) {
     res.end(JSON.stringify({state: 3, message: `邮箱呢?`}))
     return false
   }
-  
+
   insertOne({
     col: 'user',
     doc: req.body
