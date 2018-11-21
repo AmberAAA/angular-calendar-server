@@ -10,9 +10,6 @@ let {Todo} = require('../modules')
 /* 登录 */
 router.get('/login', function (req, res, next) {
 
-	res.writeHead(200, {'Content-Type': 'text/html;charset=utf-8'});
-
-
 	if (isNullOrUndefined(req.query.email) || isNullOrUndefined(req.query.passwd)) {
 		res.end(JSON.stringify({state: 2, message: `字段不全`}));
 		return false
@@ -41,8 +38,6 @@ router.get('/login', function (req, res, next) {
 
 /* 注册 */
 router.post('/login', function (req, res, next) {
-
-	res.writeHead(200, {'Content-Type': 'text/html;charset=utf-8'});
 
 	if (isNullOrUndefined(req.body.email)) {
 		res.end(JSON.stringify({state: 3, message: `邮箱呢?`}))
