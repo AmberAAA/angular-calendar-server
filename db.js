@@ -12,11 +12,11 @@ module.exports.connect = function () {
   return new Promise((resolve, reject) => {
     client.connect(function(err) {
       if (err) reject(err);
-      
+
       console.log("Connected successfully to server");
-  
+
       DB = client.db(dbName);
-      
+
       resolve(DB)
     });
   })
@@ -56,12 +56,16 @@ module.exports.remove = function (payload) {
 }
 
 
-module.exports.find = function (payload) {
-  return new Promise((resolve, reject) => {
+module.exports.find = async function (payload) {
+
+  const cursor = await new Promise((resolve, reject) => {
     DB.collection(payload.col).find(payload.query, payload.option, (err, result) => {
       if (err) reject(err);
       console.log(`success remove: ${JSON.stringify(payload)}`)
       resolve(result)
     })
   })
+
+  return cursor.toArray()
+
 }
