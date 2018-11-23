@@ -1,12 +1,13 @@
 const MongoClient = require('mongodb').MongoClient;
+const ObjectID = require('mongodb').ObjectID;
 
 let url = 'mongodb://test:test@104.225.237.158:27017/admin?readPreference=primary'
 
-let dbName = 'calendar'
+let dbName = 'calendar';
 
-const client = new MongoClient(url)
+const client = new MongoClient(url);
 
-let DB = null
+let DB = null;
 
 module.exports.connect = function () {
   return new Promise((resolve, reject) => {
@@ -39,7 +40,8 @@ module.exports.insertOne = function (payload) {
         console.error(err)
         reject(err.code)
       } else {
-        resolve(result)
+        console.dir(result.ops[0])
+        resolve(result.ops[0])
       }
     })
   })
@@ -61,11 +63,25 @@ module.exports.find = async function (payload) {
   const cursor = await new Promise((resolve, reject) => {
     DB.collection(payload.col).find(payload.query, payload.option, (err, result) => {
       if (err) reject(err);
-      console.log(`success remove: ${JSON.stringify(payload)}`)
+      console.log(`success find: ${JSON.stringify(payload)}`)
       resolve(result)
     })
   })
 
   return cursor.toArray()
 
+}
+
+module.exports.deleteOne = function (payload) {
+  if ( '_id' in payload.query) {
+    console.log('123123')
+    payload.query._id = new ObjectID(payload.query._id)
+  }
+  return new Promise((resolve, reject) => {
+	  DB.collection(payload.col).deleteOne(payload.query, payload.option, (err, result) => {
+		  if (err) reject(err);
+		  if (result.deletedCount === 1) console.log(`success delete: ${JSON.stringify(payload)}`);
+		  resolve(result.deletedCount)
+	  })
+  })
 }

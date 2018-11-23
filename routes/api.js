@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-let {insertOne, findOne, find} = require('../db')
+let {insertOne, findOne, find, deleteOne} = require('../db')
 let {isNullOrUndefined} = require('../util')
 let {Todo} = require('../modules')
 
@@ -38,7 +38,6 @@ router.get('/login', function (req, res, next) {
 
 /* 注册 */
 router.post('/login', function (req, res, next) {
-
 	if (isNullOrUndefined(req.body.email)) {
 		res.end(JSON.stringify({state: 3, message: `邮箱呢?`}))
 		return false
@@ -63,6 +62,7 @@ router.post('/login', function (req, res, next) {
 
 /* 新建TODO LIST */
 router.post('/todo', function (req, res, next) {
+
 	try {
 		console.log(req.body)
 		let body = new Todo(req.body)
@@ -70,10 +70,10 @@ router.post('/todo', function (req, res, next) {
 			col: 'todo',
 			doc: req.body
 		})
-			.then(e => res.end(JSON.stringify({state: 0})))
+			.then(e => res.end(JSON.stringify({state: 0, data: e})))
 			.catch(e => res.end(JSON.stringify({state: 1, message: e})))
 	} catch (e) {
-		res.end(JSON.stringify({state: 2, message: e}));
+		res.end(JSON.stringify({state: 2, message: e.message}));
 	}
 });
 
@@ -89,5 +89,17 @@ router.get('/todo', function (req, res, next) {
 			.then(e => res.end(JSON.stringify({state: 0, data: e})))
 			.catch(e => res.end(JSON.stringify({state: 1, message: e})))
 });
+
+/* 删除 */
+router.delete('/todo', function (req, res, netx) {
+	console.log('here')
+	deleteOne({
+		col: 'todo',
+		query: {
+			_id: req.query._id
+		}
+	}).then(e => res.end(JSON.stringify({state: ~e + 2})));
+});
+
 
 module.exports = router;
