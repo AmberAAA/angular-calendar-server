@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-let {insertOne, findOne, find, deleteOne} = require('../db')
+let {insertOne, findOne, find, deleteOne, updateOne} = require('../db')
 let {isNullOrUndefined} = require('../util')
 let {Todo} = require('../modules')
 
@@ -88,6 +88,26 @@ router.get('/todo', function (req, res, next) {
 		)
 			.then(e => res.end(JSON.stringify({state: 0, data: e})))
 			.catch(e => res.end(JSON.stringify({state: 1, message: e})))
+});
+
+/* 修改TODO LIST */
+
+router.put('/todo', function (req, res, next) {
+	updateOne({
+		col: 'todo',
+		query: {_id: req.query.id},
+		update: req.body,
+		option: {returnOriginal: false}
+		},
+	)
+		.then(e => {
+			if (e.ok === 1) {
+				res.end(JSON.stringify({state: 0, data: e.value}));
+			} else {
+				res.end(JSON.stringify({state: 1, message: JSON.stringify(e)}));
+			}
+		})
+		.catch(e => res.end(JSON.stringify({state: 1, message: e})))
 });
 
 /* 删除 */

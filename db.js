@@ -74,7 +74,6 @@ module.exports.find = async function (payload) {
 
 module.exports.deleteOne = function (payload) {
   if ( '_id' in payload.query) {
-    console.log('123123')
     payload.query._id = new ObjectID(payload.query._id)
   }
   return new Promise((resolve, reject) => {
@@ -84,4 +83,12 @@ module.exports.deleteOne = function (payload) {
 		  resolve(result.deletedCount)
 	  })
   })
-}
+};
+
+module.exports.updateOne = function (payload) {
+	if ( '_id' in payload.query) {
+		payload.query._id = new ObjectID(payload.query._id)
+	}
+  return DB.collection(payload.col).findOneAndReplace({_id: payload.query._id}, payload.update, payload.option)
+};
+
