@@ -68,7 +68,11 @@ router.post('/todo', function (req, res, next) {
 		let body = new Todo(req.body)
 		insertOne({
 			col: 'todo',
-			doc: req.body
+			doc: {
+				...req.body,
+				addTime: new Date(),
+				modifiedTime: new Date()
+			}
 		})
 			.then(e => res.end(JSON.stringify({state: 0, data: e})))
 			.catch(e => res.end(JSON.stringify({state: 1, message: e})))
@@ -96,7 +100,7 @@ router.put('/todo', function (req, res, next) {
 	updateOne({
 		col: 'todo',
 		query: {_id: req.query.id},
-		update: {$set: req.body},
+		update: {$set: {...req.body, modifiedTime: new Date()}},
 		option: {returnOriginal: false}
 		},
 	)
