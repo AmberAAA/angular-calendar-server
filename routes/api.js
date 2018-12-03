@@ -96,7 +96,7 @@ router.put('/todo', function (req, res, next) {
 	updateOne({
 		col: 'todo',
 		query: {_id: req.query.id},
-		update: req.body,
+		update: {$set: req.body},
 		option: {returnOriginal: false}
 		},
 	)
@@ -112,7 +112,6 @@ router.put('/todo', function (req, res, next) {
 
 /* 删除 */
 router.delete('/todo', function (req, res, netx) {
-	console.log('here')
 	deleteOne({
 		col: 'todo',
 		query: {
