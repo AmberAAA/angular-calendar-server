@@ -3,7 +3,7 @@ const ObjectID = require('mongodb').ObjectID;
 
 let url = 'mongodb://test:test@104.225.237.158:27017/admin?readPreference=primary'
 
-let dbName = 'calendar-dev';
+let dbName = 'calendar';
 
 const client = new MongoClient(url);
 
