@@ -1,11 +1,13 @@
 const MongoClient = require('mongodb').MongoClient;
 const ObjectID = require('mongodb').ObjectID;
 
-let url = 'mongodb://test:test@127.0.0.1:27017/admin?readPreference=primary'
+let url = 'mongodb://test:test@127.0.0.1/admin?readPreference=primary'
 
 let dbName = 'calendar';
 
-const client = new MongoClient(url);
+const client = new MongoClient(url, {
+  useNewUrlParser: true
+});
 
 let DB = null;
 
