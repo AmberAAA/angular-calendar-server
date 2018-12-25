@@ -5,7 +5,9 @@ let url = 'mongodb://test:test@anborong.top/admin?readPreference=primary';
 
 let dbName = 'calendar';
 
-const client = new MongoClient(url);
+const client = new MongoClient(url, {
+  useNewUrlParser: true
+});
 
 let DB = null;
 
