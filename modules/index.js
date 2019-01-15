@@ -27,5 +27,18 @@ function Todo ( obj ) {
     this.finish = obj.finish === undefined ? false : obj.deleted;
 }
 
+function Sensor (obj) {
+    if (!obj.sid) {
+        throw new Error('信息不全')
+    }
+    if (obj.token !== "p5l&ZV&Rqt#jCvco") {
+        throw new Error("bad request")
+    }
+    this.type = obj.type ? obj.type : null;
+    this.sid = obj.sid;
+    this.data = JSON.parse(obj.data);
+    this.modifiedTime = new Date();
+}
 
-module.exports = { Todo }
+
+module.exports = { Todo, Sensor }

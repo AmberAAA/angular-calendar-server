@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 let {insertOne, findOne, find, deleteOne, updateOne} = require('../db')
 let {isNullOrUndefined} = require('../util')
-let {Todo} = require('../modules')
+let {Todo, Sensor} = require('../modules')
 
 /* GET home page. */
 
@@ -114,7 +114,7 @@ router.put('/todo', function (req, res, next) {
 		.catch(e => res.end(JSON.stringify({state: 1, message: e})))
 });
 
-/* 删除 */
+/* 删除TODO LIST */
 router.delete('/todo', function (req, res, netx) {
 	deleteOne({
 		col: 'todo',
@@ -122,6 +122,23 @@ router.delete('/todo', function (req, res, netx) {
 			_id: req.query._id
 		}
 	}).then(e => res.end(JSON.stringify({state: ~e + 2})));
+});
+
+/* 新建 LIST */
+router.post('/sensor', function (req, res, next) {
+
+	try {
+		console.log(req.body)
+		let body = new Sensor(req.body)
+		insertOne({
+			col: 'sensor',
+			doc: body
+		})
+			.then(e => res.end(JSON.stringify({state: 0, data: e})))
+			.catch(e => res.end(JSON.stringify({state: 1, message: e})))
+	} catch (e) {
+		res.end(JSON.stringify({state: 2, message: e.message}));
+	}
 });
 
 
